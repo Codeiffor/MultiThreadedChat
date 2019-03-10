@@ -1,18 +1,20 @@
 const jwt = require('jsonwebtoken')
+const passwordHash = require('password-hash')
 
 const secretKey = 'secret key'
 module.exports = {
     signup : (req, res, userdata, blogdata) => {
         let user = req.body.username
         let password = req.body.password
-
+        let hashedPassword = passwordHash.generate(password)
+         
         if (user && password){
             userdata.find({ user }).toArray( (err, docs) => {
                 if (err)
                     return res.json({err})
 
                 if (docs.length==0){
-                    userdata.insertOne({ user, password }, (err, result) => {
+                    userdata.insertOne({ user, hashedPassword }, (err, result) => {
                         if (err)
                             return res.json({err})
                         blogdata.insertOne({ user, 'blogs':[] }, (err, result) => {
@@ -40,7 +42,7 @@ module.exports = {
                 if (err)
                     return res.json({err})
 
-                if (docs.length == 1 && docs[0].password == password){
+                if (docs.length == 1 && passwordHash.verify(password, docs[0].hashedPassword)){
                     jwt.sign( {id:docs[0]._id, user}, secretKey, { expiresIn : '5m' }, (err, token) => {
                         if (err)
                             return res.json({err})

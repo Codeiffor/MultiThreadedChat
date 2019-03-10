@@ -37,13 +37,13 @@ client.connect((err) => {
 
     
     //------THIS CLEARS THE DATABASE--------
-    app.get('/cleardb', (req, res) => {
-        userdata.deleteMany({}, (err, r) => { 
-            blogdata.deleteMany({}, (err, r) => {
-                res.sendStatus(200)
-            });
-        });
-    })
+    // app.get('/cleardb', (req, res) => {
+    //     userdata.deleteMany({}, (err, r) => { 
+    //         blogdata.deleteMany({}, (err, r) => {
+    //             res.sendStatus(200)
+    //         })
+    //     })
+    // })
     //----- ONLY FOR TESTING PURPOSE-------
 
     app.use(errorhandler())
