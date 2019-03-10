@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const secretKey = 'secret key'
 module.exports = {
-    signup : (req, res, userdata) => {
+    signup : (req, res, userdata, blogdata) => {
         let user = req.body.username
         let password = req.body.password
 
@@ -15,10 +15,11 @@ module.exports = {
                     userdata.insertOne({ user, password }, (err, result) => {
                         if (err)
                             return res.json({err})
-                        if ((1 == result.insertedCount))
+                        blogdata.insertOne({ user, 'blogs':[] }, (err, result) => {
+                            if (err)
+                                return res.json({err})
                             res.send('user registered')
-                        else
-                            res.sendStatus(500)
+                        })
                     })
                 }
                 else{
@@ -40,7 +41,7 @@ module.exports = {
                     return res.json({err})
 
                 if (docs.length == 1 && docs[0].password == password){
-                    jwt.sign( {user, password}, secretKey, { expiresIn : '1m' }, (err, token) => {
+                    jwt.sign( {id:docs[0]._id, user}, secretKey, { expiresIn : '5m' }, (err, token) => {
                         if (err)
                             return res.json({err})
                         res.cookie('token', token, {signed : true}).redirect(`/user/${user}`)
@@ -54,18 +55,43 @@ module.exports = {
             res.sendStatus(400)
     },
 
-    auth : (req, res, next) => {
+    auth : (req, res, next, userdata) => {
         let token = req.signedCookies.token
-        console.log(token);
-         
+
         jwt.verify(token, secretKey, (err, decoded) => {
             if(err)
                 return res.json({err})
-            next()
+            userdata.find({ user: req.params.user }).toArray( (err, docs) => {
+                if (err)
+                    return res.json({err})
+                if (docs.length == 1 && docs[0]._id == decoded.id){
+                    next()
+                }
+                else
+                    res.status(401).send('user not logged in')
+            })
         })
     },
 
     user : (req, res, blogdata) => {
-        res.send(`${req.params.user} logged in : user blogs will appear here`)
+        blogdata.find({ user: req.params.user }).toArray( (err, docs) => {
+            if (err)
+                return res.json({err})
+            res.json(docs[0].blogs)
+        })
+    },
+
+    postblog : (req, res, blogdata) => {
+        let title = req.body.title
+        let content = req.body.content
+        if(content && title){
+            blogdata.updateOne({ user: req.params.user }, {$push: {blogs: {title, content}}}, (err, r) => {
+                if (err)
+                    return res.json({err})
+                res.redirect(`/user/${req.params.user}`)
+            })
+        }
+        else
+            res.send('empty Blog')
     }
 }

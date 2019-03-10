@@ -21,14 +21,30 @@ client.connect((err) => {
     const blogdata = db.collection('userblogs')
 
     app.post('/signup', (req, res) => {
-        methods.signup(req, res, userdata)
+        methods.signup(req, res, userdata, blogdata)
     })
     app.post('/login', (req, res) => {
         methods.login(req, res, userdata)
     })
-    app.get('/user/:user', methods.auth, (req, res) => {
+    app.get('/user/:user', (req, res, next) => 
+        methods.auth(req, res, next, userdata), (req, res) => {
         methods.user(req, res, blogdata)
     })
+    app.post('/user/:user/postblog', (req, res, next) => 
+        methods.auth(req, res, next, userdata), (req, res) => {
+        methods.postblog(req, res, blogdata)
+    })
+
+    
+    //------THIS CLEARS THE DATABASE--------
+    app.get('/cleardb', (req, res) => {
+        userdata.deleteMany({}, (err, r) => { 
+            blogdata.deleteMany({}, (err, r) => {
+                res.sendStatus(200)
+            });
+        });
+    })
+    //----- ONLY FOR TESTING PURPOSE-------
 
     app.use(errorhandler())
     app.listen(3000)
