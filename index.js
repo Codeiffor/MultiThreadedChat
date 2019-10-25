@@ -7,7 +7,7 @@ const errorhandler = require('errorhandler')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser');
 
-const client = new MongoClient('mongodb://localhost:27017')
+const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true })
 const app = express()
 
 app.use(cookieParser('secret'));
@@ -15,7 +15,10 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 
 client.connect((err) => {
-    if (err) process.exit(1)
+    if (err) {
+        console.log({err})
+        process.exit(1)
+    }
     const db = client.db('blog')
     const userdata = db.collection('users')
     const blogdata = db.collection('userblogs')
@@ -47,5 +50,7 @@ client.connect((err) => {
     //----- ONLY FOR TESTING PURPOSE-------
 
     app.use(errorhandler())
-    app.listen(3000)
+    const port = 3000
+    console.log(`running on port ${port}`)
+    app.listen(port)
 })
