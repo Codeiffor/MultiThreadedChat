@@ -5,6 +5,7 @@
   "main": "index.js",
   "module": "main.js",
   "scripts": {
+    "start": "node --no-deprecation ./index.js",
     "server": "nodemon --no-deprecation ./index.js"
   },
   "repository": {
