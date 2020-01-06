@@ -23,11 +23,7 @@ authRouter.post(
   "/signIn",
   celebrate({
     body: Joi.object().keys({
-      name: Joi.string().required(),
       username: Joi.string().required(),
-      email: Joi.string()
-        .email()
-        .required(),
       password: Joi.string().required()
     })
   }),
