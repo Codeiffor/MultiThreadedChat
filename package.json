@@ -6,7 +6,8 @@
   "module": "main.js",
   "scripts": {
     "start": "node --no-deprecation ./index.js",
-    "server": "nodemon --no-deprecation ./index.js"
+    "server": "nodemon --no-deprecation ./index.js",
+    "build": "cd ./client && npm i && npm run build"
   },
   "repository": {
     "type": "git",
