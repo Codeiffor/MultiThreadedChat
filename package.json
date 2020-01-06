@@ -1,0 +1,36 @@
+{
+  "name": "blogs",
+  "version": "1.0.0",
+  "description": "blogs with MERN stack",
+  "main": "index.js",
+  "module": "main.js",
+  "scripts": {
+    "server": "nodemon --no-deprecation ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Codeiffor/blogs.git"
+  },
+  "author": "siddharthatrivedi4@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Codeiffor/blogs/issues"
+  },
+  "homepage": "https://github.com/Codeiffor/blogs#readme",
+  "dependencies": {
+    "@hapi/boom": "^9.0.0",
+    "bcrypt": "^3.0.7",
+    "celebrate": "^11.0.0",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.4",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
