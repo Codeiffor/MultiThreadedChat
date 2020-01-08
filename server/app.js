@@ -1,6 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import passport from "passport";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -8,13 +8,13 @@ import path from "path";
 import router from "./routes/index";
 import errorHandler from "./middlewares/errorHandler";
 
-dotenv.config();
 const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(passport.initialize());
 
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/blogs", { useNewUrlParser: true })

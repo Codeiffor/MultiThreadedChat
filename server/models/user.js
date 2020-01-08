@@ -1,30 +1,34 @@
 import { Schema, model } from "mongoose";
 import bcypt from "bcrypt";
 
-const schema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true
+const schema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    image: {
+      type: String
+    },
+    google: {},
+    linkedin: {}
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  }
-});
+  { timestamps: true }
+);
 
 const preSave = function() {
   const saltRounds = 10;
-  this.password = bcypt.hashSync(this.password, saltRounds);
+  if (this.password) this.password = bcypt.hashSync(this.password, saltRounds);
 };
 
 schema.pre("save", preSave);
